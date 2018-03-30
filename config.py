@@ -6,4 +6,8 @@ class ProdConfig(Config):
 
 class DevConfig(Config):
     DEBUG = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_COMMIT_TEARDOWN = True
+
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql:root:sunfuwen@127.0.0.1:3000/www_sfw_com_db"
 
