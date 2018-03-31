@@ -1,5 +1,5 @@
 from flask_script import Manager,Server
-from main import app, db, User
+from main import app, db, User, Post
 
 manager = Manager(app)
 
@@ -8,7 +8,7 @@ manager.add_command("Server",Server())
 @manager.shell
 
 def make_shell_context():
-    return dict(app = app, db = db, User = User)
+    return dict(app = app, db = db, User = User, Post = Post)
 
 
 
@@ -74,5 +74,27 @@ def make_shell_context():
 # user = User.query.filter_by(username = 'fake_name').first()
 #
 # db.session.delete(user)
+#
+# db.session.commit()
+#
+# -----------------
+#
+# user = User.query.get(1)
+#
+# new_post = Post('Post Title')
+#
+# new_post.user_id = user.id
+#
+# user.posts.all()
+#
+# db.session.add(new_post)
+#
+# db.session.commit()
+#
+# second_post = Post('Second Title')
+#
+# second_post.user = user
+#
+# db.session.add(second_post)
 #
 # db.session.commit()
