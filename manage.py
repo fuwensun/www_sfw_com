@@ -1,10 +1,14 @@
 from flask_script import Manager,Server
 from main import app, db, User, Post, Tag, tags,Comment
-from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, MigrateCommand
+
+migrate = Migrate(app,db)
 
 manager = Manager(app)
 
 manager.add_command("Server",Server())
+
+manager.add_command('db',MigrateCommand)
 
 @manager.shell
 def make_shell_context():
@@ -17,7 +21,29 @@ if __name__ == "__main__":
 
 
 
-
+# 1按装：
+# sudo apt-get install mysql-server
+# sudo apt-get install mysql-client
+# sudo apt-get install libmysqlclient-dev
+# sudo netstat -tap | grep mysql
+#
+#
+# 2登入：
+# mysql -u root -p
+#
+# 3使用库：
+# show databases;
+# mysqladmin -u root -p create xxxdb;
+# mysqladmin -u root -p drop xxxdb;
+# use xxxdb;
+#
+# 4使用表：
+# show tables;
+# create table xxxtable(column_name column_type);
+# describe xxxtable;
+# drop table xxxtable;
+# select * from xxxtable;
+#
 #-----------------------
 #
 # from manage import *
@@ -52,7 +78,7 @@ if __name__ == "__main__":
 
 # -----------------------
 #
-# page = User.query.paginate(1,1)
+# page = User.query.paginate(1,2)
 #
 # page.items
 #
@@ -101,5 +127,54 @@ if __name__ == "__main__":
 # second_post.user = user
 #
 # db.session.add(second_post)
+#
+# db.session.commit()
+#
+# -----------------
+# db.create_all()
+#
+# post_one = Post.query.filter_by(title = 'Post Title').first()
+#
+# post_one
+#
+# post_two = Post.query.filter_by(title = 'Second Title').first()
+#
+# post_two
+#
+# tag_one = Tag('Python')
+#
+# tag_two = Tag('SQLAlchemy')
+#
+# tag_three = Tag('Flask')
+#
+# post_one.tags.all()
+#
+# tag_two.posts.all()
+#
+# post_one.tags = [tag_one]
+#
+# post_two.tags = [tag_one, tag_two, tag_three]
+#
+# tag_two.posts
+#
+# post_one.tags.all()
+#
+# post_two.tags.all()
+#
+# tag_one.posts.all()
+#
+# db.session.add(post_one)
+#
+# db.session.add(post_two)
+#
+# db.session.commit()
+#
+# tag_one.posts.append(post_one)
+#
+# tag_three.posts.append(post_one)
+#
+# tag_three.posts.all()
+#
+# db.session.add(tag_three)
 #
 # db.session.commit()
