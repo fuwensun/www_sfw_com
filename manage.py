@@ -1,14 +1,17 @@
 from flask_script import Manager,Server
-from main import app, db, User, Post
+from main import app, db, User, Post, Tag, tags,Comment
+from flask_sqlalchemy import SQLAlchemy
 
 manager = Manager(app)
 
 manager.add_command("Server",Server())
 
 @manager.shell
-
 def make_shell_context():
-    return dict(app = app, db = db, User = User, Post = Post)
+    return dict(app = app, db = db, User = User, Post = Post, Tag = Tag, tags = tags,Comment = Comment)
+
+if __name__ == "__main__":
+    manager.run()
 
 
 
@@ -18,6 +21,8 @@ def make_shell_context():
 #-----------------------
 #
 # from manage import *
+#
+# python manage.py shell
 #
 # db.create_all()
 #
