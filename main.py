@@ -109,21 +109,21 @@ class CommentForm(FlaskForm):
     )
     text = TextAreaField(u'Comment', validators=[DataRequired()])
 
-def sidebar_data():
-    recent = Post.query.order_by(Post.publish_date.desc()).limit(5).all()
-    top_tags = db.session.query(
-        Tag, func.count(tags.c.post_id).label('total')
-    ).join(tags).group_by(Tag).order_by('total').limit(5).all()
-
-    return recent, top_tags
-
 # def sidebar_data():
 #     recent = Post.query.order_by(Post.publish_date.desc()).limit(5).all()
 #     top_tags = db.session.query(
 #         Tag, func.count(tags.c.post_id).label('total')
-#     ).join(tags).group_by(Tag).order_by('total DESC').limit(5).all()
+#     ).join(tags).group_by(Tag).order_by('total').limit(5).all()
 #
 #     return recent, top_tags
+
+def sidebar_data():
+    recent = Post.query.order_by(Post.publish_date.desc()).limit(5).all()
+    top_tags = db.session.query(
+        Tag, func.count(tags.c.post_id).label('total')
+    ).join(tags).group_by(Tag).order_by('total DESC').limit(5).all()
+
+    return recent, top_tags
 
 @app.route('/')
 @app.route('/<int:page>')
@@ -135,9 +135,8 @@ def home(page=1):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'home.html',
-        # 'index.html',
-        posts = posts,
+        'home.html',                    #   html to render
+        posts = posts,                  #   some var to html
         recent = recent,
         top_tags = top_tags
     )
@@ -161,7 +160,7 @@ def home(page=1):
 @app.route('/post/<int:post_id>', methods=('GET', 'POST'))
 def post(post_id):
     form = CommentForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit():       #new comment submit
         new_comment = Comment()
         new_comment.name = form.name.data
         new_comment.text = form.text.data
