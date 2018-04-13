@@ -89,3 +89,4 @@ def user(username):
         recent = recent,
         top_tags = top_tags
     )
+
