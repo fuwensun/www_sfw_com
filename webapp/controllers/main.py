@@ -14,11 +14,10 @@ from flask_login import login_user, logout_user
 #     identity_changed
 # )
 
-# from webapp.extensions import oid, facebook, twitter
+from webapp.extensions import oid#, facebook, twitter
 from webapp.models import db, User
-from webapp.forms import LoginForm, RegisterForm#, OpenIDForm
+from webapp.forms import LoginForm, RegisterForm, OpenIDForm
 
-import logging
 
 def debug(str):
     print("<=== my debug ===> " + str)
@@ -37,18 +36,17 @@ def index():
 
 
 @main_blueprint.route('/login', methods=['GET', 'POST'])
-# @oid.loginhandler
+@oid.loginhandler
 def login():
-    # app.logger.debug('login()')
     form = LoginForm()
-    # openid_form = OpenIDForm()
-    #
-    # if openid_form.validate_on_submit():
-    #     return oid.try_login(
-    #         openid_form.openid.data,
-    #         ask_for=['nickname', 'email'],
-    #         ask_for_optional=['fullname']
-    #     )
+    openid_form = OpenIDForm()
+
+    if openid_form.validate_on_submit():
+        return oid.try_login(
+            openid_form.openid.data,
+            ask_for=['nickname', 'email'],
+            ask_for_optional=['fullname']
+        )
 
     if form.validate_on_submit():
         # user = User.query.filter_by(username=form.username.data).one()
@@ -62,13 +60,11 @@ def login():
         flash("You have been logged in.", category="success")
         return redirect(url_for('blog.home'))
 
-    # openid_errors = oid.fetch_error()
-    # if openid_errors:
-    #     flash(openid_errors, category="danger")
-
-    # return render_template('login.html', form=form, openid_form=openid_form)
+    openid_errors = oid.fetch_error()
+    if openid_errors:
+        flash(openid_errors, category="danger")
     debug("login()")
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, openid_form=openid_form)
 
 
 @main_blueprint.route('/logout', methods=['GET', 'POST'])
@@ -90,20 +86,19 @@ def logout():
 
 
 @main_blueprint.route('/register', methods=['GET', 'POST'])
-# @oid.loginhandler
+@oid.loginhandler
 def register():
     form = RegisterForm()
-    # openid_form = OpenIDForm()
-    #
-    # if openid_form.validate_on_submit():
-    #     return oid.try_login(
-    #         openid_form.openid.data,
-    #         ask_for=['nickname', 'email'],
-    #         ask_for_optional=['fullname']
-    #     )
+    openid_form = OpenIDForm()
+
+    if openid_form.validate_on_submit():
+        return oid.try_login(
+            openid_form.openid.data,
+            ask_for=['nickname', 'email'],
+            ask_for_optional=['fullname']
+        )
 
     if form.validate_on_submit():
-    # if True:
         new_user = User(form.username.data)
         new_user.set_password(form.password.data)
 
@@ -114,13 +109,12 @@ def register():
 
         return redirect(url_for('.login'))
 
-    # openid_errors = oid.fetch_error()
-    # if openid_errors:
-    #     flash(openid_errors, category="danger")
+    openid_errors = oid.fetch_error()
+    if openid_errors:
+        flash(openid_errors, category="danger")
 
-    # return render_template('register.html', form=form, openid_form=openid_form)
     debug("register()")
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, openid_form=openid_form)
 
 
 

@@ -42,6 +42,8 @@ class LoginForm(Form):
 
         return True
 
+class OpenIDForm(Form):
+    openid = StringField('OpenID URL', [DataRequired(), URL()])
 
 class RegisterForm(Form):
     username = StringField('Username', [DataRequired(), Length(max=255)])
