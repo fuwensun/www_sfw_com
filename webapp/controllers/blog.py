@@ -7,7 +7,7 @@ from webapp.forms import CommentForm
 blog_blueprint = Blueprint(
     'blog',
     __name__,
-    template_folder = 'templates/blog',
+    template_folder = '../templates/blog',
     url_prefix = "/blog"
 )
 
@@ -28,7 +28,7 @@ def home(page=1):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'blog/home.html',                    #   html to render
+        'home.html',                    #   html to render
         posts = posts,                  #   some var to html
         recent = recent,
         top_tags = top_tags
@@ -53,7 +53,7 @@ def post(post_id):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'blog/post.html',
+        'post.html',
         post=post,
         tags=tags,
         comments=comments,
@@ -69,7 +69,7 @@ def tag(tag_name):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'blog/tag.html',
+        'tag.html',
         tag = tag,
         posts = posts,
         recent = recent,
@@ -83,7 +83,7 @@ def user(username):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'blog/user.html',
+        'user.html',
         user = user,
         posts = posts,
         recent = recent,
