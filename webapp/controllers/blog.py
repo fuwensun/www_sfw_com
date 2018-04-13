@@ -1,8 +1,12 @@
 import datetime
 from sqlalchemy import func
-from flask import render_template, Blueprint
+from flask import (render_template,
+                   Blueprint,
+                   redirect,
+                   url_for,
+                   abort)
 from webapp.models import db, Post, Tag, Comment, User, tags
-from webapp.forms import CommentForm
+from webapp.forms import CommentForm, PostForm
 
 blog_blueprint = Blueprint(
     'blog',
@@ -61,6 +65,57 @@ def post(post_id):
         top_tags=top_tags,
         form=form
     )
+
+
+@blog_blueprint.route('/new', methods=['GET', 'POST'])
+# @login_required
+# @poster_permission.require(http_exception=403)
+def new_post():
+    form = PostForm()
+
+    if form.validate_on_submit():
+        new_post = Post(form.title.data)
+        new_post.text = form.text.data
+        new_post.publish_date = datetime.datetime.now()
+        # new_post.user = User.query.filter_by(
+        #     username=current_user.username
+        # ).one()
+
+        db.session.add(new_post)
+        db.session.commit()
+        # return redirect(url_for('blog.home'))
+
+    return render_template('new.html', form=form)
+
+
+@blog_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# @poster_permission.require(http_exception=403)
+def edit_post(id):
+    post = Post.query.get_or_404(id)
+
+    # permission = Permission(UserNeed(post.user.id))
+    #
+    # # We want admins to be able to edit any post
+    # if permission.can() or admin_permission.can():
+    if True:
+        form = PostForm()
+
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.text = form.text.data
+            post.publish_date = datetime.datetime.now()
+
+            db.session.add(post)
+            db.session.commit()
+
+            return redirect(url_for('.post', post_id=post.id))
+
+        form.text.data = post.text
+
+        return render_template('edit.html', form=form, post=post)
+
+    # abort(403)
 
 @blog_blueprint.route('/tag/<string:tag_name>')
 def tag(tag_name):
