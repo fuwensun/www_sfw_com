@@ -1,9 +1,9 @@
 import random
 import datetime
-from main import *
+from webapp.models import db, Post, Tag, Comment, User, tags
 
 
-user = User.query.get(1)
+user = User.query.get(4)
 tag_one = Tag('Python')
 tag_two = Tag('Flask')
 tag_three = Tag('SQLAlechemy')

@@ -7,11 +7,14 @@ from flask_migrate import Migrate, MigrateCommand
 # from webapp import app
 from webapp import create_app
 
-from webapp.models import db, User, Post, Tag, tags,Comment
+from webapp.models import db, User, Role, Post, Tag, tags,Comment
+
+from webapp.config import DevConfig
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
-app = create_app('webapp.config.%sConfig' % env.capitalize())
+# app = create_app('webapp.config.%sConfig' % env.capitalize())
+app = create_app(DevConfig)
 
 migrate = Migrate(app,db)
 
@@ -27,11 +30,13 @@ def make_shell_context():
         app = app,
         db = db,
         User = User,
+        Role=Role,
         Post = Post,
         Tag = Tag,
         tags = tags,
         Comment = Comment,
         env = env
+
     )
 
 if __name__ == "__main__":
@@ -200,3 +205,20 @@ if __name__ == "__main__":
 # db.session.add(tag_three)
 #
 # db.session.commit()
+#
+# -----------------
+# db.create_all()
+# arole = Role('admin')
+# arole.description = 'admin_role'
+# prole = Role('poster')
+# prole.description = 'poster_role'
+# drole = Role('default')
+# drole.description = 'default_role'
+# db.session.add(arole)
+# db.session.add(prole)
+# db.session.add(drole)
+# db.session.commit()
+
+# user = User.query.filter_by(username = 'sfw').first()
+#
+# prole = Role.query.filter_by(username = 'poster').first()

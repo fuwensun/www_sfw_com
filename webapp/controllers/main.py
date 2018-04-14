@@ -8,11 +8,11 @@ from flask import (render_template,
                    session)
 
 from flask_login import login_user, logout_user
-# from flask_principal import (
-#     Identity,
-#     AnonymousIdentity,
-#     identity_changed
-# )
+from flask_principal import (
+    Identity,
+    AnonymousIdentity,
+    identity_changed
+)
 
 from webapp.extensions import oid#, facebook, twitter
 from webapp.models import db, User
@@ -49,13 +49,13 @@ def login():
         )
 
     if form.validate_on_submit():
-        # user = User.query.filter_by(username=form.username.data).one()
-        # login_user(user, remember=form.remember.data)
-        #
-        # identity_changed.send(
-        #     current_app._get_current_object(),
-        #     identity=Identity(user.id)
-        # )
+        user = User.query.filter_by(username=form.username.data).one()
+        login_user(user, remember=form.remember.data)
+
+        identity_changed.send(
+            current_app._get_current_object(),
+            identity=Identity(user.id)
+        )
 
         flash("You have been logged in.", category="success")
         return redirect(url_for('blog.home'))
@@ -69,18 +69,16 @@ def login():
 
 @main_blueprint.route('/logout', methods=['GET', 'POST'])
 def logout():
-    # logout_user()
-    #
-    # identity_changed.send(
-    #     current_app._get_current_object(),
-    #     identity=AnonymousIdentity()
-    # )
+    logout_user()
+
+    identity_changed.send(
+        current_app._get_current_object(),
+        identity=AnonymousIdentity()
+    )
 
     flash("You have been logged out.", category="success")
-    # return redirect(url_for('.login'))
     debug("logout()")
-    return redirect(url_for('.home'))
-
+    return redirect(url_for('.login'))
 
 
 
