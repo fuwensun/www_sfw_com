@@ -44,3 +44,8 @@ def create_or_login(resp):
 
     session['username'] = username
     return redirect(url_for('blog.home'))
+
+
+from flask_restful import Api
+
+rest_api = Api()
