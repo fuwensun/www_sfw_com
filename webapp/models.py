@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from webapp.extensions import bcrypt
 from flask_login import AnonymousUserMixin
 
+def debug(str):
+    print("<=== my debug ===> " + str)
+
 db = SQLAlchemy()
 
 tags = db.Table(
@@ -100,7 +103,7 @@ class Post(db.Model):
         self.title = title
 
     def __repr__(self):
-        return "<Post '{}'>".format(self.title)
+        return "<Post '{}' id = {}>".format(self.title,self.id)
 
 class Comment(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

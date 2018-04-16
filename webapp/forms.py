@@ -6,6 +6,8 @@ from wtforms import StringField, TextAreaField, PasswordField, BooleanField
 
 from webapp.models import User
 
+
+
 class CommentForm(FlaskForm):
     name = StringField(
         'Name',

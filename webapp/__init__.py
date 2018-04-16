@@ -30,8 +30,7 @@ def create_app(object_name):
     login_manager.init_app(app)
     principals.init_app(app)
 
-    app.register_blueprint(blog_blueprint)
-    app.register_blueprint(main_blueprint)
+
 
     rest_api.add_resource(
         PostApi,
@@ -39,6 +38,10 @@ def create_app(object_name):
         '/api/post/<int:post_id>',
         endpoint = 'api'
     )
+
+    app.register_blueprint(blog_blueprint)
+    app.register_blueprint(main_blueprint)
+
     rest_api.init_app(app)
     return app
 
