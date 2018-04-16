@@ -4,6 +4,7 @@ from webapp.models import db
 from webapp.controllers.blog import blog_blueprint
 from webapp.controllers.main import main_blueprint
 from webapp.controllers.rest.post import PostApi
+from webapp.controllers.rest.auth import AuthApi
 from flask_principal import identity_loaded, UserNeed, RoleNeed
 from flask_login import current_user
 
@@ -30,7 +31,10 @@ def create_app(object_name):
     login_manager.init_app(app)
     principals.init_app(app)
 
-
+    rest_api.add_resource(
+        AuthApi,
+        '/api/auth',
+    )
 
     rest_api.add_resource(
         PostApi,

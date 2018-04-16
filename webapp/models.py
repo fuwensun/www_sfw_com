@@ -1,7 +1,13 @@
-
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from webapp.extensions import bcrypt
 from flask_login import AnonymousUserMixin
+
+from itsdangerous import (
+    TimedJSONWebSignatureSerializer as Serializer,
+    BadSignature,
+    SignatureExpired
+)
 
 def debug(str):
     print("<=== my debug ===> " + str)
@@ -67,6 +73,21 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+
+        user = User.query.get(data['id'])
+        return user
 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
