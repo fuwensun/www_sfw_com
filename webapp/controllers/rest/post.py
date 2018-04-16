@@ -103,6 +103,7 @@ class PostApi(Resource):
 
 
     def put(self, post_id=None):
+        # curl - X PUT - d "title=Modified From Rest" - d "text=The body text from Rest" - d "tags=Python" - d "token=eyJleHAiOjE1MjQ0NjI1NTQsImFsZyI6IkhTMjU2IiwiaWF0IjoxNTIzODU3NzU0fQ.eyJpZCI6MX0.5JT5R1g5lHFhE_7Y54NQP8oahypGHyT5yXgTNz_5kN4"http: // 127.0.0.1: 5000 / api / post / 101
         if not post_id:
             abort(400)
 
@@ -139,6 +140,7 @@ class PostApi(Resource):
         return post.id, 201
 
     def delete(self, post_id=None):
+        # curl - X DELETE - d "token=eyJhbGciOiJIUzI1NiIsImlhdCI6MTUyMzg1OTMxMywiZXhwIjoxNTI0NDY0MTEzfQ.eyJpZCI6MX0.e62uRCtdy0J3n2whNpkWiHkwNdaufJVsX7Fxhkw5zQY" http: // 127.0.0.1: 5000 / api / post / 101
         if not post_id:
             abort(400)
 
