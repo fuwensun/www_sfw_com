@@ -9,9 +9,6 @@ from itsdangerous import (
     SignatureExpired
 )
 
-def debug(str):
-    print("<=== my debug ===> " + str)
-
 db = SQLAlchemy()
 
 tags = db.Table(

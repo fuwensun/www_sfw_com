@@ -1,3 +1,4 @@
+from . import debug
 from flask import abort, current_app
 from flask_restful import Resource
 
@@ -6,7 +7,6 @@ from .parsers import user_post_parser
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-from webapp.models import debug
 
 
 class AuthApi(Resource):

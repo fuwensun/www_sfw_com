@@ -1,3 +1,4 @@
+from . import debug
 from flask import (render_template,
                    current_app,
                    Blueprint,
@@ -19,8 +20,6 @@ from webapp.models import db, User
 from webapp.forms import LoginForm, RegisterForm, OpenIDForm
 
 
-def debug(str):
-    print("<=== my debug ===> " + str)
 
 main_blueprint = Blueprint(
     'main',

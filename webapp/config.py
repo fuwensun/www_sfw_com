@@ -13,4 +13,11 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db"
     SQLALCHEMY_ECHO = True
 
+    # CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
+    # CELERY_BACKEND_URL = "amqp://guest:guest@localhost:5672//"
+
+    CELERY_BROKER_URL  = "redis://localhost:6379//"
+    CELERY_BACKEND_URL = "redis://localhost"
+
+    # CELERY_IMPORTS = ("webapp.tasks")
 

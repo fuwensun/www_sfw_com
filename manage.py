@@ -1,24 +1,18 @@
 import os
-
 from flask_script import Manager,Server
-
 from flask_migrate import Migrate, MigrateCommand
-
-# from webapp import app
 from webapp import create_app
-
 from webapp.models import db, User, Role, Post, Tag, tags,Comment
-
 from webapp.config import DevConfig
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
-# app = create_app('webapp.config.%sConfig' % env.capitalize())
-app = create_app(DevConfig)
+myapp = create_app('webapp.config.%sConfig' % env.capitalize())
+# myapp = create_app(DevConfig)
 
-migrate = Migrate(app,db)
+migrate = Migrate(myapp,db)
 
-manager = Manager(app)
+manager = Manager(myapp)
 
 manager.add_command("Server",Server())
 
@@ -27,7 +21,7 @@ manager.add_command('db',MigrateCommand)
 @manager.shell
 def make_shell_context():
     return dict(
-        app = app,
+        app = myapp,
         db = db,
         User = User,
         Role=Role,
@@ -35,7 +29,8 @@ def make_shell_context():
         Tag = Tag,
         tags = tags,
         Comment = Comment,
-        env = env
+        env = env,
+        # celery = celery
 
     )
 
@@ -44,6 +39,30 @@ if __name__ == "__main__":
 
 
 
+# --celery 使用-------
+# echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+# wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+# sudo apt-get install rabbitmq-server
+# sudo apt-get update
+# sudo apt-get install rabbitmq-server
+# rabbitmq-server
+# sudo rabbitmq-server
+# ps aux | grep rabbit
+# ps aux | grep rabbitmq
+# invoke-rc.d rabbitmq-server status
+#
+# celery worker -A celery_runner --loglevel=info
+# celery worker -A celery_runner --loglevel=info --config=celery_config
+#
+# from webapp.tasks import log
+# log("Message")
+# result = log.delay("Message")
+# result.ready()
+# result.get()
+
+# celery status
+# celery report
+# celery inspect conf
 
 
 # 1按装：
@@ -222,3 +241,5 @@ if __name__ == "__main__":
 # user = User.query.filter_by(username = 'sfw').first()
 #
 # prole = Role.query.filter_by(username = 'poster').first()
+
+

@@ -1,8 +1,9 @@
 import datetime
 from flask_restful import Resource, fields, marshal_with
 from flask import abort
-from webapp.models import Post, User, Tag, db, debug
+from webapp.models import Post, User, Tag, db
 from .fields import HTMLField
+from . import debug
 
 from .parsers import (
     post_get_parser,
@@ -10,7 +11,6 @@ from .parsers import (
     post_put_parser,
     post_delete_parser
 )
-
 
 
 nested_tag_fields = {

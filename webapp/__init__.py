@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, url_for
 from webapp.config import DevConfig
 from webapp.models import db
@@ -8,14 +9,14 @@ from webapp.controllers.rest.auth import AuthApi
 from flask_principal import identity_loaded, UserNeed, RoleNeed
 from flask_login import current_user
 
-from .extensions import (
+from webapp.extensions import (
     bcrypt,
     oid,
     login_manager,
     principals,
-    rest_api
+    rest_api,
+    celery
 )
-
 
 
 def debug(str):
@@ -30,6 +31,7 @@ def create_app(object_name):
     oid.init_app(app)
     login_manager.init_app(app)
     principals.init_app(app)
+    celery.init_app(app)
 
     rest_api.add_resource(
         AuthApi,
@@ -43,33 +45,30 @@ def create_app(object_name):
         endpoint = 'api'
     )
 
+    rest_api.init_app(app)
+
+    @identity_loaded.connect_via(app)
+    def on_identity_loaded(sender, identity):
+        # Set the identity user object
+        identity.user = current_user
+
+        # Add the UserNeed to the identity
+        if hasattr(current_user, 'id'):
+            identity.provides.add(UserNeed(current_user.id))
+
+        # Add each role to the identity
+        if hasattr(current_user, 'roles'):
+            for role in current_user.roles:
+                identity.provides.add(RoleNeed(role.name))
+
+        debug("on_identity_loaded()" + '-----' + str(current_user))
+
     app.register_blueprint(blog_blueprint)
     app.register_blueprint(main_blueprint)
-
-    rest_api.init_app(app)
     return app
 
-app = create_app(DevConfig)
-# app = create_app('webapp.config.ProdConfig')
-
-
-@identity_loaded.connect_via(app)
-def on_identity_loaded(sender, identity):
-    # Set the identity user object
-    identity.user = current_user
-
-    # Add the UserNeed to the identity
-    if hasattr(current_user, 'id'):
-        identity.provides.add(UserNeed(current_user.id))
-
-    # Add each role to the identity
-    if hasattr(current_user, 'roles'):
-        for role in current_user.roles:
-            identity.provides.add(RoleNeed(role.name))
-
-    debug("on_identity_loaded()" + '-----' + str(current_user));
-
-
-
 if __name__ == '__main__':
-    app.run()
+    env = os.environ.get('WEBAPP_ENV', 'dev')
+    myapp = create_app('webapp.config.%sConfig' % env.capitalize())
+    # myapp = create_app(DevConfig)
+    myapp.run()

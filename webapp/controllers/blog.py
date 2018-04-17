@@ -1,3 +1,5 @@
+from . import debug
+
 import datetime
 from sqlalchemy import func
 from flask import (render_template,
@@ -11,8 +13,6 @@ from webapp.forms import CommentForm, PostForm
 from webapp.extensions import poster_permission, admin_permission
 from flask_principal import Permission, UserNeed
 
-def debug(str):
-    print("<=== my debug ===> " + str)
 
 blog_blueprint = Blueprint(
     'blog',

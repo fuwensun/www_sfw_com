@@ -4,11 +4,15 @@ from flask_openid import OpenID
 # from flask_oauth import OAuth
 from flask_login import LoginManager
 from flask_principal import Principal, Permission, RoleNeed
+from flask_restful import Api
+from flask_celery import Celery
 
 bcrypt = Bcrypt()
 oid = OpenID()
 # oauth = OAuth()
+rest_api = Api()
 principals = Principal()
+celery = Celery()
 
 admin_permission = Permission(RoleNeed('admin'))
 poster_permission = Permission(RoleNeed('poster'))
@@ -46,6 +50,6 @@ def create_or_login(resp):
     return redirect(url_for('blog.home'))
 
 
-from flask_restful import Api
 
-rest_api = Api()
+
+
