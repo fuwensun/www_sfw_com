@@ -4,6 +4,7 @@ from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
 from webapp.models import db, User, Role, Post, Tag, tags,Comment
 from webapp.config import DevConfig
+from webapp.tasks import log
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -30,7 +31,7 @@ def make_shell_context():
         tags = tags,
         Comment = Comment,
         env = env,
-        # celery = celery
+        log = log,
 
     )
 

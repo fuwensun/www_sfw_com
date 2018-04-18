@@ -1,9 +1,6 @@
 import os
-from webapp import create_app
+from webapp import create_app, debug
 from celery import Celery
-from webapp.config import DevConfig
-from webapp.models import debug
-from webapp.tasks import log
 
 def make_celery(app):
     celery = Celery(
@@ -12,6 +9,7 @@ def make_celery(app):
         backend=app.config['CELERY_BACKEND_URL'],
     )
     celery.conf.update(app.config)
+
     TaskBase = celery.Task
 
     class ContextTask(TaskBase):
@@ -23,12 +21,17 @@ def make_celery(app):
 
     celery.Task = ContextTask
 
-    debug("1" + str(celery.conf))
-    debug(str(celery.backend))
-
+    # debug(str(celery.conf))
     return celery
 
 env = os.environ.get('WEBAPP_ENV', 'dev')
 flask_app = create_app('webapp.config.%sConfig' % env.capitalize())
 # flask_app = create_app(DevConfig)
 celery = make_celery(flask_app)
+
+
+
+
+# self.__autoset('result_backend', backend)
+# self._preconf[key] = value
+# self._preconf_set_by_auto.add(key)

@@ -33,6 +33,9 @@ def create_app(object_name):
     principals.init_app(app)
     celery.init_app(app)
 
+    # debug("celery.conf" + '-----' + str(celery._preconf['result_backend']))
+    debug(str(celery._preconf.items()))
+
     rest_api.add_resource(
         AuthApi,
         '/api/auth',
@@ -42,7 +45,6 @@ def create_app(object_name):
         PostApi,
         '/api/post',
         '/api/post/<int:post_id>',
-        endpoint = 'api'
     )
 
     rest_api.init_app(app)
