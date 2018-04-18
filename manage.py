@@ -4,7 +4,7 @@ from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
 from webapp.models import db, User, Role, Post, Tag, tags,Comment
 from webapp.config import DevConfig
-from webapp.tasks import log
+from webapp.tasks import log,multiply
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -32,39 +32,12 @@ def make_shell_context():
         Comment = Comment,
         env = env,
         log = log,
+        multiply = multiply,
 
     )
 
 if __name__ == "__main__":
     manager.run()
-
-
-
-# --celery 使用-------
-# echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
-# wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
-# sudo apt-get install rabbitmq-server
-# sudo apt-get update
-# sudo apt-get install rabbitmq-server
-# rabbitmq-server
-# sudo rabbitmq-server
-# ps aux | grep rabbit
-# ps aux | grep rabbitmq
-# invoke-rc.d rabbitmq-server status
-#
-# celery worker -A celery_runner --loglevel=info
-# celery worker -A celery_runner --loglevel=info --config=celery_config
-#
-# from webapp.tasks import log
-# log("Message")
-# result = log.delay("Message")
-# result.ready()
-# result.get()
-
-# celery status
-# celery report
-# celery inspect conf
-
 
 # 1按装：
 # sudo apt-get install mysql-server
@@ -242,5 +215,89 @@ if __name__ == "__main__":
 # user = User.query.filter_by(username = 'sfw').first()
 #
 # prole = Role.query.filter_by(username = 'poster').first()
+
+
+# --------<celery 使用>-----------
+#
+# --rabbitmq使用--
+# echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+# wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
+# sudo apt-get install rabbitmq-server
+# sudo apt-get update
+# sudo apt-get install rabbitmq-server
+#
+# rabbitmq-server
+# sudo rabbitmq-server
+# ps aux | grep rabbit
+# ps aux | grep rabbitmq
+# invoke-rc.d rabbitmq-server status
+#
+# --redis使用--
+# sudo apt-get install redis-server
+# sudo /etc/init.d/redis-server status
+# sudo /etc/init.d/redis-server restart
+# sudo /etc/init.d/redis-server status
+# netstat -nlt|grep redis
+
+#--------<celery cmd>---------
+# celery worker -A celery_runner --loglevel=info
+# celery worker -A celery_runner --loglevel=info --config=celery_config
+#
+# from webapp.tasks import log
+# log("Message")
+# result = log.delay("Message")
+# result.ready()
+# result.get()
+#ALT + SHIFT + INS ---》 CLOUMN EDIT
+#-------
+# celery status
+# ps -ef |grep celery |awk '{print $2}'|xargs kill -9
+# celery status
+# celery control shutdown celery@ud30g_u1
+# celery inspect state
+# celery inspect stats
+# celery inspect clock
+# celery inspect conf
+# celery inspect ping
+# celery inspect report
+#-------
+# a = multiply.subtask((4,4),countdown=1)
+# a.ready()
+# log(2)
+# log.delay(5)
+# multiply(4,5)
+# multiply.delay(4,5)
+# multiply.s(4,5)
+# multiply.s(4,5)()
+# multiply.s(4,5).delay()
+# multiply.apply_async((4,4),link=log.s())
+# multiply.apply_async((4,49),link=log.si("message"))
+# partial = multiply.s(2)
+# partial.delay(3)
+# partial = multiply.s(2).delay(7)
+# multiply.apply_async((4,49),link=multiply.s(4))
+# multiply.apply_async((4,49),link=multiply.s(4)).get()
+# multiply.apply_async((4,49),link=multiply.s(4)).ready()
+# from celery import group
+# sig = group(multply.s(i,i+5) for i in range(10))
+# result = sig.delay()
+# result.get()
+# from celery import chain
+# sig = chain(multiply.s(10,10), multiply.s(4), multiply.s(20))
+# result = sig.delay()
+# result.get()
+# a = multiply.apply_async((4,49),link=multiply.s(4))
+# a.get()
+# a multiply.apply_async((4,49),link=log.si("message"))
+# a = multiply.apply_async((4,49),link=log.si("message"))
+# a.get()
+# from celery.schedules import crontab
+# crontab(minute=0,hour=0)
+
+
+
+
+
+
 
 
