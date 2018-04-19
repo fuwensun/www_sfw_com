@@ -1,6 +1,6 @@
-from . import debug
 
 import datetime
+from webapp.extensions import debug
 from sqlalchemy import func
 from flask import (render_template,
                    Blueprint,

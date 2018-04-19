@@ -1,4 +1,5 @@
 import os
+from webapp.extensions import debug
 from flask import Flask, redirect, url_for
 from webapp.config import DevConfig
 from webapp.models import db
@@ -21,10 +22,6 @@ from webapp.extensions import (
     rest_api,
     celery
 )
-
-
-def debug(str):
-    print("<=== my debug ===> " + str)
 
 def create_app(object_name):
     app = Flask(__name__)

@@ -5,7 +5,7 @@ import datetime
 from email.mime.text import MIMEText
 from flask import render_template
 
-from webapp.extensions import celery
+from webapp.extensions import debug,celery
 from webapp.models import Reminder, Post
 
 

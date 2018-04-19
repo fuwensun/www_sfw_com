@@ -1,4 +1,4 @@
-from . import debug
+from webapp.extensions import debug
 from flask import (render_template,
                    current_app,
                    Blueprint,

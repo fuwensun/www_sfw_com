@@ -1,5 +1,6 @@
 import os
-from webapp import create_app, debug
+from webapp.extensions import debug
+from webapp import create_app
 from celery import Celery
 
 def make_celery(app):

@@ -7,6 +7,9 @@ from flask_principal import Principal, Permission, RoleNeed
 from flask_restful import Api
 from flask_celery import Celery
 
+def debug(str):
+    print("       <=== !!! my debug !!!===> " + str)
+
 bcrypt = Bcrypt()
 oid = OpenID()
 # oauth = OAuth()
