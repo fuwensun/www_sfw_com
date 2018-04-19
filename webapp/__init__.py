@@ -9,6 +9,10 @@ from webapp.controllers.rest.auth import AuthApi
 from flask_principal import identity_loaded, UserNeed, RoleNeed
 from flask_login import current_user
 
+from sqlalchemy import event
+from webapp.models import db, Reminder
+from webapp.tasks import on_reminder_save
+
 from webapp.extensions import (
     bcrypt,
     oid,
@@ -27,6 +31,8 @@ def create_app(object_name):
     app.config.from_object(object_name)
 
     db.init_app(app)
+    # event.listen(Reminder, 'after_insert', on_reminder_save)
+
     bcrypt.init_app(app)
     oid.init_app(app)
     login_manager.init_app(app)
@@ -69,8 +75,15 @@ def create_app(object_name):
     app.register_blueprint(main_blueprint)
     return app
 
+
+# env = os.environ.get('WEBAPP_ENV', 'dev')
+# myapp = create_app('webapp.config.%sConfig' % env.capitalize())
+# myapp = create_app(DevConfig)
+
 if __name__ == '__main__':
-    env = os.environ.get('WEBAPP_ENV', 'dev')
-    myapp = create_app('webapp.config.%sConfig' % env.capitalize())
-    # myapp = create_app(DevConfig)
+    # env = os.environ.get('WEBAPP_ENV', 'dev')
+    # myapp = create_app('webapp.config.%sConfig' % env.capitalize())
+    myapp = create_app(DevConfig)
+    print("runing !!!!")
     myapp.run()
+
