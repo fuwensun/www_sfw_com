@@ -31,7 +31,7 @@ def create_app(object_name):
     app.config.from_object(object_name)
 
     db.init_app(app)
-    # event.listen(Reminder, 'after_insert', on_reminder_save)
+    event.listen(Reminder, 'after_insert', on_reminder_save)
 
     bcrypt.init_app(app)
     oid.init_app(app)

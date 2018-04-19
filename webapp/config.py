@@ -6,13 +6,13 @@ class Config(object):
     SECRET_KEY = '736670cb10a600b695a55839ca3a5aa54a7d7356cdef815d2ad6e19a2031182b'
 
     #my add
-    SERVER_NAME = "sfw_web_server"
+    # SERVER_NAME = "sfw_web_server"
 
 class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db"
 
     #my add
-    SERVER_NAME = "sfw_web_server_prod"
+    # SERVER_NAME = "sfw_web_server_prod"
 
 class DevConfig(Config):
     DEBUG = True
@@ -34,17 +34,17 @@ class DevConfig(Config):
     CELERY_IMPORTS = ("webapp.tasks")
     # ------------------------------
 
-    # CELERYBEAT_SCHEDULE = {
-    #     'log-every-10-seconds': {
-    #         'task': 'webapp.tasks.log',
-    #         # 'schedule': datetime.timedelta(seconds=10),
-    #         'schedule': crontab(minute=0, hour=0),
-    #         'args':("Message",)
-    #     },
-    # }
+    CELERYBEAT_SCHEDULE = {
+        'log-every-10-seconds': {
+            'task': 'webapp.tasks.log',
+            'schedule': datetime.timedelta(seconds=10),
+            # 'schedule': crontab(minute=0, hour=0),
+            'args':("Message",)
+        },
+    }
 
     #my add
-    SERVER_NAME = "sfw_web_server_dev"
+    # SERVER_NAME = "sfw_web_server_dev"
 
 
 
