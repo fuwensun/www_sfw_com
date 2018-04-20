@@ -1,4 +1,5 @@
 import os
+from webapp.config import DevConfig
 from webapp.extensions import debug
 from webapp import create_app
 from celery import Celery
@@ -25,9 +26,9 @@ def make_celery(app):
     # debug(str(celery.conf))
     return celery
 
-env = os.environ.get('WEBAPP_ENV', 'dev')
-flask_app = create_app('webapp.config.%sConfig' % env.capitalize())
-# flask_app = create_app(DevConfig)
+# env = os.environ.get('WEBAPP_ENV', 'dev')
+# flask_app = create_app('webapp.config.%sConfig' % env.capitalize())
+flask_app = create_app(DevConfig)
 celery = make_celery(flask_app)
 
 

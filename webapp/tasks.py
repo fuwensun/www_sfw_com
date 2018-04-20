@@ -1,38 +1,60 @@
 from webapp.extensions import celery
-
 import smtplib
 import datetime
 from email.mime.text import MIMEText
 from flask import render_template
-
 from webapp.extensions import debug,celery
-from webapp.models import Reminder, Post
+from webapp.models import Reminder, Post, db, Comment
 
+# celery worker -A celery_runner --loglevel=info    #异步task必须启动worker进程
+# celery -A celery_runner beat                      #定时器task必须启动beat进程
+
+def debug_tasks(str):
+    debug(" <==!tasks print!==> " + str)
 
 @celery.task()
 def log(msg):
+    debug_tasks("log()")
     return msg
-
 
 @celery.task()
 def multiply(x, y):
+    debug_tasks("log()")
     return x*y
 
 @celery.task()
 def m(x, y):
+    debug_tasks("m()")
     return x*y
 
+@celery.task()
+def xx_new_comment(self, pk):
+    debug_tasks("xx_new_comment()")
+    s  = "remind task()" + "  self = " + str(self) + "  pk = " + str(pk)
+    new_comment = Comment()
+    new_comment.name = s
+    new_comment.text = s
+    new_comment.post_id = 1
+    new_comment.date = datetime.datetime.now()
+    # db.session.add(new_comment)
+    # db.session.commit()
+    return "remind task()" + "  self = " + str(self) + "  pk = " + str(pk)
 
 @celery.task(
-    bind=True,
-    # ignore_result=True,        //如果启用remind.get（） 和 ready（）会阻塞
-    # default_retry_delay=300,
-    default_retry_delay=3,
+    bind=True,               #task对象 绑定第一个参数self
+    #ignore_result=True,     #如果启用remind.get（） 和 ready（）会阻塞
+    default_retry_delay=30,  # default_retry_delay=1000,
     max_retries=5
 )
 def remind(self, pk):
-
-    return "remind task()" + "  self = " + str(self) + "  pk = " + str(pk)
+    debug_tasks("remind()")
+    s  = str(self) + "  pk = " + str(pk)
+    new_comment = Comment()
+    new_comment.name = s
+    new_comment.text = s
+    new_comment.post_id = 1
+    new_comment.date = datetime.datetime.now()
+    return s
 
     reminder = Reminder.query.get(pk)
     msg = MIMEText(reminder.text)
@@ -57,8 +79,7 @@ def remind(self, pk):
 
 
 @celery.task(
-    # bind=True,
-    # ignore_result=True,
+    bind=True,# ignore_result=True,
     default_retry_delay=300,
     max_retries=5
 )
@@ -99,8 +120,23 @@ def digest(self):
         self.retry(exc=e)
 
 def on_reminder_save(mapper, connect, self):
+
+    #ok
+    # debug("on_reminder_save()")
+    # result = log.apply_async(args=(["log->msg"]))
+    # debug(str(result.ready()) + "  " + str(result.get()))
+
+    #ok
+    # debug("on_reminder_save()")
+    # result = m.apply_async(args=(111,3))
+    # debug(str(result.ready()) + "  " + str(result.get()))
+
+    #ok
+    # debug("on_reminder_save()")
+    # result = xx_new_comment.apply_async(args=(111,3))
+    # debug(str(result.ready()) + "  " + str(result.get()))
+
     debug("on_reminder_save()")
-    remind.apply_async(args=(self.id,), eta=self.date)
-    # result = remind.apply_async(args=(self.id,123), eta=self.date)
-    # result = remind.apply_async(args=(1,2))
-    # debug(str(result.ready()) + str(result.get()))
+    result = remind.apply_async(args=(self.id,))            #(self.id,) "," 必需要
+    debug(str(result.ready()) + str(result.get()))
+

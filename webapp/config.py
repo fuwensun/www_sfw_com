@@ -36,24 +36,24 @@ class DevConfig(Config):
 
     CELERYBEAT_SCHEDULE = {
 
-        'test--log-every-1-seconds': {
-            'task': 'tasks.digest',
-            'schedule': datetime.timedelta(seconds=10000),
-            # 'schedule': crontab(minute=0, hour=0),
-            'args': ("Message",)
-        },
+        # 'test--log-every-1-seconds': {
+        #     'task': 'webpp.tasks.digest',
+        #     'schedule': datetime.timedelta(seconds=10000),
+        #     # 'schedule': crontab(minute=0, hour=0),
+        #     'args': ("Message",)
+        # },
 
-        'log-every-1000-seconds': {
+        'log-every-10-seconds': {
             'task': 'webapp.tasks.log',
-            'schedule': datetime.timedelta(seconds=1000),
+            'schedule': datetime.timedelta(seconds=10),
             # 'schedule': crontab(minute=0, hour=0),
             'args':("Message",)
         },
 
-        'weekly-digest': {
-            'task': 'tasks.digest',
-            'schedule': crontab(day_of_week=6, hour='10')
-        },
+        # 'weekly-digest': {
+        #     'task': 'webpp.tasks.digest',
+        #     'schedule': crontab(day_of_week=6, hour='10')
+        # },
     }
 
     #my add
