@@ -4,7 +4,7 @@ from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
 from webapp.models import db, User, Role, Post, Tag, tags,Comment
 from webapp.config import DevConfig
-from webapp.tasks import log,multiply
+from webapp.tasks import log,multiply,remind,digest,m
 
 # default to dev config
 env = os.environ.get('WEBAPP_ENV', 'dev')
@@ -33,6 +33,9 @@ def make_shell_context():
         env = env,
         log = log,
         multiply = multiply,
+        remind = remind,
+        digest = digest,
+        m = m,
 
     )
 
@@ -226,11 +229,12 @@ if __name__ == "__main__":
 # sudo apt-get update
 # sudo apt-get install rabbitmq-server
 #
-# rabbitmq-server
 # sudo rabbitmq-server
-# ps aux | grep rabbit
 # ps aux | grep rabbitmq
 # invoke-rc.d rabbitmq-server status
+# invoke-rc.d rabbitmq-server start
+# invoke-rc.d rabbitmq-server restart
+# invoke-rc.d rabbitmq-server stop
 #
 # --redis使用--
 # sudo apt-get install redis-server

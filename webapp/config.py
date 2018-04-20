@@ -20,7 +20,7 @@ class DevConfig(Config):
     SQLALCHEMY_COMMIT_TEARDOWN = True
 
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db"
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_ECHO = True
 
     # ------------------------------
     CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
@@ -35,11 +35,24 @@ class DevConfig(Config):
     # ------------------------------
 
     CELERYBEAT_SCHEDULE = {
-        'log-every-10-seconds': {
+
+        'test--log-every-1-seconds': {
+            'task': 'tasks.digest',
+            'schedule': datetime.timedelta(seconds=10000),
+            # 'schedule': crontab(minute=0, hour=0),
+            'args': ("Message",)
+        },
+
+        'log-every-1000-seconds': {
             'task': 'webapp.tasks.log',
-            'schedule': datetime.timedelta(seconds=10),
+            'schedule': datetime.timedelta(seconds=1000),
             # 'schedule': crontab(minute=0, hour=0),
             'args':("Message",)
+        },
+
+        'weekly-digest': {
+            'task': 'tasks.digest',
+            'schedule': crontab(day_of_week=6, hour='10')
         },
     }
 

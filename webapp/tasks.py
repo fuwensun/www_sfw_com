@@ -18,14 +18,22 @@ def log(msg):
 def multiply(x, y):
     return x*y
 
+@celery.task()
+def m(x, y):
+    return x*y
+
 
 @celery.task(
     bind=True,
-    ignore_result=True,
-    default_retry_delay=300,
+    # ignore_result=True,        //如果启用remind.get（） 和 ready（）会阻塞
+    # default_retry_delay=300,
+    default_retry_delay=3,
     max_retries=5
 )
 def remind(self, pk):
+
+    return "remind task()" + "  self = " + str(self) + "  pk = " + str(pk)
+
     reminder = Reminder.query.get(pk)
     msg = MIMEText(reminder.text)
 
@@ -40,11 +48,59 @@ def remind(self, pk):
         smtp_server.sendmail("", [reminder.email], msg.as_string())
         smtp_server.close()
 
+        # debug("debug--remind task()" + "  self = " + str(self) + "  pk = " + str(pk))
+        # return "remind task()" + "  self = " + str(self) + "  pk = " + str(pk)
         return
+
     except Exception as e:
         self.retry(exc=e)
 
 
+@celery.task(
+    # bind=True,
+    # ignore_result=True,
+    default_retry_delay=300,
+    max_retries=5
+)
+def digest(self):
+    return "digest task()" + "  self = " + str(self)
+    # find the start and end of this week
+    year, week = datetime.datetime.now().isocalendar()[0:2]
+    date = datetime.date(year, 1, 1)
+    if (date.weekday() > 3):
+        date = date + datetime.timedelta(7 - date.weekday())
+    else:
+        date = date - datetime.timedelta(date.weekday())
+    delta = datetime.timedelta(days=(week - 1) * 7)
+    start, end = date + delta, date + delta + datetime.timedelta(days=6)
+
+    posts = Post.query.filter(
+        Post.publish_date >= start,
+        Post.publish_date <= end
+    ).all()
+
+    if (len(posts) == 0):
+        return
+
+    msg = MIMEText(render_template("digest.html", posts=posts), 'html')
+
+    msg['Subject'] = "Weekly Digest"
+    msg['From'] = ""
+
+    try:
+        smtp_server = smtplib.SMTP('localhost')
+        smtp_server.starttls()
+        # smtp_server.login(user, password)
+        smtp_server.sendmail("", [""], msg.as_string())
+        smtp_server.close()
+
+        return
+    except Exception as e:
+        self.retry(exc=e)
 
 def on_reminder_save(mapper, connect, self):
+    debug("on_reminder_save()")
     remind.apply_async(args=(self.id,), eta=self.date)
+    # result = remind.apply_async(args=(self.id,123), eta=self.date)
+    # result = remind.apply_async(args=(1,2))
+    # debug(str(result.ready()) + str(result.get()))

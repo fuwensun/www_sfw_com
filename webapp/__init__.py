@@ -2,7 +2,7 @@ import os
 from webapp.extensions import debug
 from flask import Flask, redirect, url_for
 from webapp.config import DevConfig
-from webapp.models import db
+from webapp.models import db, Comment
 from webapp.controllers.blog import blog_blueprint
 from webapp.controllers.main import main_blueprint
 from webapp.controllers.rest.post import PostApi
@@ -28,7 +28,8 @@ def create_app(object_name):
     app.config.from_object(object_name)
 
     db.init_app(app)
-    event.listen(Reminder, 'after_insert', on_reminder_save)
+    # event.listen(Reminder, 'after_insert', on_reminder_save)
+    event.listen(Comment, 'after_insert', on_reminder_save)
 
     bcrypt.init_app(app)
     oid.init_app(app)
@@ -81,6 +82,6 @@ if __name__ == '__main__':
     # env = os.environ.get('WEBAPP_ENV', 'dev')
     # myapp = create_app('webapp.config.%sConfig' % env.capitalize())
     myapp = create_app(DevConfig)
-    print("runing !!!!")
+    debug("runing !!!!")
     myapp.run()
 
