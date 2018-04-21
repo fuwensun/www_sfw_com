@@ -20,7 +20,8 @@ from webapp.extensions import (
     login_manager,
     principals,
     rest_api,
-    celery
+    celery,
+    debug_toolbar,
 )
 
 def create_app(object_name):
@@ -36,6 +37,7 @@ def create_app(object_name):
     login_manager.init_app(app)
     principals.init_app(app)
     celery.init_app(app)
+    debug_toolbar.init_app(app)
 
     # debug("celery.conf" + '-----' + str(celery._preconf['result_backend']))
     debug(str(celery._preconf.items()))

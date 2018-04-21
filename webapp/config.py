@@ -16,6 +16,7 @@ class ProdConfig(Config):
 
 class DevConfig(Config):
     DEBUG = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_COMMIT_TEARDOWN = True
 
