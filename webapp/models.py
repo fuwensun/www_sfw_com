@@ -149,7 +149,7 @@ class Tag(db.Model):
 class Reminder(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     date = db.Column(db.DateTime())
-    email = db.Column(db.String())
+    email = db.Column(db.String(255))
     text = db.Column(db.Text())
 
     def __repr__(self):
