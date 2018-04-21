@@ -65,8 +65,9 @@ if __name__ == "__main__":
 # drop table xxxtable;
 # select * from xxxtable;
 #
+# delete from comment where id between 38 and 62;
 # delete from comment where id  not between 0 and 100;
-#5
+#
 #top_tags = db.session.query(Tag, func.count(tags.c.post_id).label('total')).join(tags).group_by(Tag).order_by('total DESC').limit(5).all()
 #-----------------------
 #
