@@ -1,5 +1,9 @@
 import os
+import datetime
+import random
+
 from flask_script import Manager,Server
+from flask_script.commands import ShowUrls, Clean
 from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
 from webapp.models import db, User, Role, Post, Tag, tags,Comment
@@ -14,10 +18,12 @@ myapp = create_app('webapp.config.%sConfig' % env.capitalize())
 migrate = Migrate(myapp,db)
 
 manager = Manager(myapp)
-
+manager.add_command("show-urls", ShowUrls())
+manager.add_command("clean", Clean())
 manager.add_command("Server",Server())
-
 manager.add_command('db',MigrateCommand)
+
+
 
 @manager.shell
 def make_shell_context():
@@ -36,8 +42,44 @@ def make_shell_context():
         remind = remind,
         digest = digest,
         m = m,
-
     )
+
+@manager.command
+def setup_db():
+    db.create_all()
+
+    admin_role = Role(name = "admin22")
+    admin_role.description = "admin22"
+    db.session.add(admin_role)
+
+    default_role = Role(name = "default22")
+    default_role.description = "default22"
+    db.session.add(default_role)
+
+    admin = User(username = "admin")
+    admin.set_password("password")
+    admin.roles.append(admin_role)
+    admin.roles.append(default_role)
+    db.session.add(admin)
+
+    tag_one = Tag('Python')
+    tag_two = Tag('Flask')
+    tag_three = Tag('SQLAlechemy')
+    tag_four = Tag('Jinja')
+    tag_list = [tag_one, tag_two, tag_three, tag_four]
+
+    s = "Body text"
+
+    for i in range(100):
+        new_post = Post("Post " + str(i))
+        new_post.user = admin
+        new_post.publish_date = datetime.datetime.now()
+        new_post.text = s
+        new_post.tags = random.sample(tag_list, random.randint(1, 3))
+        db.session.add(new_post)
+
+    db.session.commit()
+
 
 if __name__ == "__main__":
     manager.run()
