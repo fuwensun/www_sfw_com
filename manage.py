@@ -341,11 +341,3 @@ if __name__ == "__main__":
 # a.get()
 # from celery.schedules import crontab
 # crontab(minute=0,hour=0)
-
-
-
-
-
-
-
-
