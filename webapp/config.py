@@ -68,7 +68,7 @@ class TestConfig(Config):
     DEBUG = True
     DEBUG_TB_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db_test"
 
     CACHE_TYPE = 'null'
     WTF_CSRF_ENABLED = False
