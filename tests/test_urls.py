@@ -9,6 +9,7 @@ from webapp.models import db, User, Role
 from webapp.extensions import rest_api
 
 
+
 class TestURLs(unittest.TestCase):
     def setUp(self):
         # Bug workarounds

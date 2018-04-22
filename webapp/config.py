@@ -45,9 +45,9 @@ class DevConfig(Config):
         #     'args': ("Message",)
         # },
 
-        'log-every-10-seconds': {
+        'log-every-20-seconds': {
             'task': 'webapp.tasks.log',
-            'schedule': datetime.timedelta(seconds=10),
+            'schedule': datetime.timedelta(seconds=20),
             # 'schedule': crontab(minute=0, hour=0),
             'args':("Message",)
         },
@@ -81,6 +81,29 @@ class TestConfig(Config):
     MAIL_PORT = 25
     MAIL_USERNAME = 'username'
     MAIL_PASSWORD = 'password'
+
+
+    CELERYBEAT_SCHEDULE = {
+
+        # 'test--log-every-1-seconds': {
+        #     'task': 'webpp.tasks.digest',
+        #     'schedule': datetime.timedelta(seconds=10000),
+        #     # 'schedule': crontab(minute=0, hour=0),
+        #     'args': ("Message",)
+        # },
+
+        'log-every-20-seconds': {
+            'task': 'webapp.tasks.log',
+            'schedule': datetime.timedelta(seconds=20),
+            # 'schedule': crontab(minute=0, hour=0),
+            'args':("Message",)
+        },
+
+        # 'weekly-digest': {
+        #     'task': 'webpp.tasks.digest',
+        #     'schedule': crontab(day_of_week=6, hour='10')
+        # },
+    }
 
 
 

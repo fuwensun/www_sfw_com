@@ -7,7 +7,7 @@ from webapp.extensions import debug,celery
 from webapp.models import Reminder, Post, db, Comment
 
 # celery worker -A celery_runner --loglevel=info    #异步task必须启动worker进程
-# celery -A celery_runner beat                      #定时器task必须启动beat进程
+# t celery -A celery_runner bea                     #定时器task必须启动beat进程
 
 def debug_tasks(str):
     debug(" <==!tasks print!==> " + str)

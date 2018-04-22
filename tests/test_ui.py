@@ -8,6 +8,15 @@ import unittest
 from selenium import webdriver
 
 
+def debug(str):
+    print("       <=== !!! my debug !!!===> " + str)
+
+def delay(long):
+    for i in range(long):
+        a = 1
+        b = a  + 1
+    return b
+
 class TestURLs(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -24,6 +33,8 @@ class TestURLs(unittest.TestCase):
             4. Go to the blog home page and verify that the post is
                on the page
         """
+        debug("test_add_new_post()")
+
         # login
         self.driver.get("http://localhost:5000/login")
 
@@ -38,6 +49,7 @@ class TestURLs(unittest.TestCase):
 
         # fill out the form
         self.driver.get("http://localhost:5000/blog/new")
+        delay(10000)
 
         title_field = self.driver.find_element_by_name("title")
         title_field.send_keys("Test Title")
@@ -46,11 +58,9 @@ class TestURLs(unittest.TestCase):
         # self.driver.switch_to.frame(
         #     self.driver.find_element_by_tag_name("iframe")
         # )
-        post_field = self.driver.find_element_by_name(
-            "text"
-        )
+        post_field = self.driver.find_element_by_name("text")
         post_field.send_keys("Test content")
-        self.driver.switch_to.parent_frame()
+        # self.driver.switch_to.parent_frame()
 
         post_button = self.driver.find_element_by_class_name("btn-primary")
         post_button.click()
