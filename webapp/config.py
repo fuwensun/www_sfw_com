@@ -1,4 +1,5 @@
 import datetime
+import tempfile
 from celery.schedules import crontab
 
 
@@ -59,6 +60,27 @@ class DevConfig(Config):
 
     #my add
     # SERVER_NAME = "sfw_web_server_dev"
+
+
+class TestConfig(Config):
+    db_file = tempfile.NamedTemporaryFile()
+
+    DEBUG = True
+    DEBUG_TB_ENABLED = False
+
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:sunfuwen@127.0.0.1/www_sfw_com_db"
+
+    CACHE_TYPE = 'null'
+    WTF_CSRF_ENABLED = False
+
+    CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
+    CELERY_BACKEND_URL = "amqp://guest:guest@localhost:5672//"
+    CELERY_RESULT_BACKEND = "amqp://guest:guest@localhost:5672//"   #************becarefore*********
+
+    MAIL_SERVER = 'localhost'
+    MAIL_PORT = 25
+    MAIL_USERNAME = 'username'
+    MAIL_PASSWORD = 'password'
 
 
 
