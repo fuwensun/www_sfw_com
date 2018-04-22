@@ -341,3 +341,12 @@ if __name__ == "__main__":
 # a.get()
 # from celery.schedules import crontab
 # crontab(minute=0,hour=0)
+
+
+
+#----selenium-------------
+# from selenium import webdriver
+# driver = webdriver.Firefox()
+# driver.get("http://localhost:5000/login")
+# # http://localhost:5000/login
+# sf = driver.find_element_by_name("username")
